@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,6 +22,9 @@ public class Usuario {
     private String apellido;
     private String mail;
     private String clave;
+
+    @ManyToOne
+    private Zona zona;
     
     @Temporal(TemporalType.TIMESTAMP)   //guarda la fecha y la zona horaria (la fecha se almacena en el uso horario del usuario)
     private Date alta;
@@ -84,6 +88,12 @@ public class Usuario {
         this.baja = baja;
     }
     
-    
+    public Zona getZona() {
+        return zona;
+    }
+
+    public void setZona(Zona zona) {
+        this.zona = zona;
+    }
     
 }

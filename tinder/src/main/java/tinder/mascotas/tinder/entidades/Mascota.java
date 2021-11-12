@@ -3,11 +3,15 @@ package tinder.mascotas.tinder.entidades;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
+import tinder.mascotas.tinder.enumeraciones.Sexo;
 
 @Entity
 public class Mascota {
@@ -17,6 +21,12 @@ public class Mascota {
     private String id;
     
     private String nombre;
+    
+    @Enumerated(EnumType.STRING)
+    private Sexo sexo;
+    
+    @ManyToOne
+    private Usuario usuario;
       
     @Temporal(TemporalType.TIMESTAMP)
     private Date alta;
@@ -54,6 +64,22 @@ public class Mascota {
 
     public void setBaja(Date baja) {
         this.baja = baja;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
     
     
