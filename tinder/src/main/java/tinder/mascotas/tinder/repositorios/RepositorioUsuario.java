@@ -9,6 +9,6 @@ import tinder.mascotas.tinder.entidades.Usuario;
 @Repository
 public interface RepositorioUsuario extends JpaRepository<Usuario,String>{
     
-    @Query("SELECT c FROM Usuario WHERE c.mail = :mail")
+    @Query("SELECT c FROM Usuario c WHERE c.mail = :mail")
     public Usuario BuscarPorMail (@Param("mail")String mail);
 }

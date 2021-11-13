@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,7 +34,11 @@ public class Mascota {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date baja;
-
+    
+    @OneToOne
+    private Foto foto;
+    
+    
     public String getId() {
         return id;
     }
@@ -80,6 +85,14 @@ public class Mascota {
 
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
+    }
+
+    public Foto getFoto() {
+        return foto;
+    }
+
+    public void setFoto(Foto foto) {
+        this.foto = foto;
     }
     
     

@@ -1,15 +1,21 @@
 package tinder.mascotas.tinder.servicios;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tinder.mascotas.tinder.enumeraciones.Sexo;
 import tinder.mascotas.tinder.entidades.Usuario;
 import tinder.mascotas.tinder.entidades.Mascota;
+import tinder.mascotas.tinder.entidades.Foto;
 import tinder.mascotas.tinder.exception.MyException;
 import tinder.mascotas.tinder.repositorios.RepositorioMascota;
 import tinder.mascotas.tinder.repositorios.RepositorioUsuario;
 
+@Service
 public class MascotaServicio {
     
     @Autowired
@@ -18,7 +24,11 @@ public class MascotaServicio {
     @Autowired
     private RepositorioMascota repositorioMascota;
     
-    public void agregarMascota (String idUsuario,String nombre,Sexo sexo) throws MyException{
+    @Autowired
+    private FotoServicio fotoServicio;
+    
+    @Transactional
+    public void agregarMascota (MultipartFile archivo,String idUsuario,String nombre,Sexo sexo) throws MyException, IOException{
         
         Usuario usuario = repositorioUsuario.findById(idUsuario).get();
         
@@ -29,10 +39,14 @@ public class MascotaServicio {
         mascota.setSexo(sexo);
         mascota.setAlta(new Date());
         
+        Foto foto = fotoServicio.guardar(archivo);
+        mascota.setFoto(foto);
+        
         repositorioMascota.save(mascota);
     }
     
-    public void modificar (String idUsuario,String idMascota,String nombre,Sexo sexo) throws MyException{
+    @Transactional
+    public void modificar (MultipartFile archivo,String idUsuario,String idMascota,String nombre,Sexo sexo) throws MyException, IOException{
         validar(nombre,sexo);
         
         Optional<Mascota>respuesta = repositorioMascota.findById(idMascota);
@@ -41,6 +55,14 @@ public class MascotaServicio {
             if (mascota.getUsuario().getId().equals(idUsuario)){
                 mascota.setNombre(nombre);
                 mascota.setSexo(sexo);
+                
+                String idFoto = null;
+                if (mascota.getFoto() != null){
+                    idFoto = mascota.getId();
+                }
+                Foto foto = fotoServicio.actualizar(idFoto, archivo);
+                mascota.setFoto(foto);
+                 
                 repositorioMascota.save(mascota);
             }else{
                 throw new MyException("No tiene autorización para realizar esos cambios.");
@@ -49,6 +71,8 @@ public class MascotaServicio {
             throw new MyException("No existe la mascota solicitada.");
         }
     }
+    
+    @Transactional
     public void eliminar (String idUsuario,String idMascota) throws MyException{
          Optional<Mascota>respuesta = repositorioMascota.findById(idMascota);
         if (respuesta.isPresent()){

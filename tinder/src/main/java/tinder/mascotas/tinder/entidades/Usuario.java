@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,6 +32,9 @@ public class Usuario {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date baja;
+    
+    @OneToOne
+    private Foto foto;
 
     public String getId() {
         return id;
@@ -94,6 +98,14 @@ public class Usuario {
 
     public void setZona(Zona zona) {
         this.zona = zona;
+    }
+
+    public Foto getFoto() {
+        return foto;
+    }
+
+    public void setFoto(Foto foto) {
+        this.foto = foto;
     }
     
 }
